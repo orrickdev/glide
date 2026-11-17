@@ -425,6 +425,15 @@ EEex_EnableCodeProtection()
 
 Glide_Installed = true
 
+-- The player's "On/Off" switch, for other files of the mod (M_GlideV.lua glides the view only while it is on).
+function Glide_IsEnabled()
+	return enabled
+end
+
+-- Rows other files of the mod add below this file's rows in the "Glide" tab: functions that each return one
+-- EEex_Options_DisplayEntry. They are called when EEex builds the tab, after all override files have loaded.
+Glide_ExtraOptionEntries = Glide_ExtraOptionEntries or {}
+
 -- The switches, in the EEex Options menu under the tab "Glide".
 -- EEex saves each one in the game's settings file, section "Glide". Until the player changes one,
 -- smooth movement is on and the others are as set at the top of this file. Without EEex's options
@@ -443,13 +452,13 @@ local function saved(name)
 end
 local TEXTS = {
 	Glide_TabTitle = "Glide",
-	Glide_Enabled = "Smooth movement",
+	Glide_Enabled = "On/Off",
 	Glide_Enabled_Description = "Walking creatures glide between the game's movement steps.",
 	Glide_Circles = "Selection circles glide",
 	Glide_Circles_Description = "A walking creature's selection circle glides with its body. Off: the circle steps with the game.",
-	Glide_CircleEase = "Circle: glide into place on pause",
+	Glide_CircleEase = "Circle: Glide-in on pause",
 	Glide_CircleEase_Description = "When the game is paused, a gliding selection circle glides to the creature's real position over the glide-in time.",
-	Glide_BodyEase = "Body: glide into place on pause",
+	Glide_BodyEase = "Body: Glide-in on pause",
 	Glide_BodyEase_Description = "When the game is paused, a gliding body glides to the creature's real position over the glide-in time.",
 	Glide_GlideInMs = "Glide-in time on pause (ms)",
 	Glide_GlideInMs_Description = "How long, in milliseconds, a circle or body takes to glide into place when the game is paused. 0 to 5000; 0 is the same as both switches above off.",
@@ -516,8 +525,8 @@ if optionsAvailable() then
 		["onChange"] = function(self) easeUs = (self:get() or GLIDE_IN_MS) * US_PER_MS end,
 	}))
 
-	EEex_Options_AddTab("Glide_TabTitle", function() return {
-		{
+	EEex_Options_AddTab("Glide_TabTitle", function()
+		local rows = {
 			EEex_Options_DisplayEntry.new({
 				["optionID"]    = OPTION_ENABLED,
 				["label"]       = "Glide_Enabled",
@@ -551,6 +560,10 @@ if optionsAvailable() then
 					["number"] = true,
 				}),
 			}),
-		},
-	} end)
+		}
+		for _, makeRow in ipairs(Glide_ExtraOptionEntries) do
+			table.insert(rows, makeRow())
+		end
+		return { rows }
+	end)
 end

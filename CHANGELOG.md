@@ -1,5 +1,12 @@
 # Changelog
 
+## 2 - 2026-11-17
+
+- New optional file Glide View (`M_GlideV.lua`): the view glides when it follows a character (a held party number key, a double-click on an off-screen character's portrait, or a lock on a creature).
+- Three new settings in the "Glide" tab for Glide View: "View Damping" (on/off), "Follow Damping (ms)" (120) and "Jump Damping (ms)" (300).
+- "Smooth movement" is now called "On/Off" and also switches Glide View.
+- "Circle: glide into place on pause" and "Body: glide into place on pause" are now called "Circle: Glide-in on pause" and "Body: Glide-in on pause". Saved settings are kept.
+
 ## 1.0.0 - 2026-11-15
 
 - Walking creatures glide smoothly between the game's movement steps.
